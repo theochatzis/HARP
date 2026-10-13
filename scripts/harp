@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+"""HARP command line entry point. Source env/setup.sh, then: harp -h"""
+import os
+import sys
+
+here = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(os.path.dirname(here), "python"))
+os.environ.setdefault("HARP_BASE", os.path.dirname(here))
+
+from harp.cli import main  # noqa: E402
+
+if __name__ == "__main__":
+    sys.exit(main())

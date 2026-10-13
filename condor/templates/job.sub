@@ -1,0 +1,15 @@
+universe              = vanilla
+executable            = {work}/job.sh
+arguments             = $(jobid)
+transfer_input_files  = {work}/harp.tar.gz, {work}/jobs.json
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+output                = {work}/logs/job_$(jobid).out
+error                 = {work}/logs/job_$(jobid).err
+log                   = {work}/logs/cluster.log
+request_cpus          = 1
+request_memory        = {memory}
++JobFlavour           = "{flavour}"
+getenv                = False
+max_retries           = 2
+queue jobid from {work}/{joblist}

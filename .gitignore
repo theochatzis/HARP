@@ -1,0 +1,14 @@
+build/
+install/
+*.pyc
+__pycache__/
+*.root
+*.pdf
+*.png
+output/
+work/
+samples/files/*.txt
+!samples/files/.gitkeep
+*.log
+*.swp
+.vscode/

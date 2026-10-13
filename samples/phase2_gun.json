@@ -1,0 +1,9 @@
+{
+  "pi0_p1to200":  {"path": "/eos/user/t/tchatzis/phase2_gun/pi0_p1to200",  "pattern": "*.root", "pdgId": 111,   "label": "#pi^{0}",  "momentumRange": [1, 200], "type": "gun"},
+  "pip_p1to200":  {"path": "/eos/user/t/tchatzis/phase2_gun/pip_p1to200",  "pattern": "*.root", "pdgId": 211,   "label": "#pi^{+}",  "momentumRange": [1, 200], "type": "gun"},
+  "pim_p1to200":  {"path": "/eos/user/t/tchatzis/phase2_gun/pim_p1to200",  "pattern": "*.root", "pdgId": -211,  "label": "#pi^{-}",  "momentumRange": [1, 200], "type": "gun"},
+  "Kp_p1to200":   {"path": "/eos/user/t/tchatzis/phase2_gun/Kp_p1to200",   "pattern": "*.root", "pdgId": 321,   "label": "K^{+}",    "momentumRange": [1, 200], "type": "gun"},
+  "Km_p1to200":   {"path": "/eos/user/t/tchatzis/phase2_gun/Km_p1to200",   "pattern": "*.root", "pdgId": -321,  "label": "K^{-}",    "momentumRange": [1, 200], "type": "gun"},
+  "p_p1to200":    {"path": "/eos/user/t/tchatzis/phase2_gun/p_p1to200",    "pattern": "*.root", "pdgId": 2212,  "label": "p",        "momentumRange": [1, 200], "type": "gun"},
+  "pbar_p1to200": {"path": "/eos/user/t/tchatzis/phase2_gun/pbar_p1to200", "pattern": "*.root", "pdgId": -2212, "label": "#bar{p}",  "momentumRange": [1, 200], "type": "gun"}
+}

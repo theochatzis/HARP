@@ -1,0 +1,18 @@
+harp_add_library(Core
+  SOURCES
+    src/Logger.cc
+    src/ParameterSet.cc
+    src/Glob.cc
+    src/BranchRegistry.cc
+    src/Event.cc
+    src/ProductRegistry.cc
+    src/Module.cc
+    src/ModuleFactory.cc
+    src/HistService.cc
+    src/FlatTable.cc
+    src/Persistence.cc
+    src/OutputTree.cc
+    src/InputSource.cc
+    src/PluginLoader.cc
+    src/Processor.cc
+)
