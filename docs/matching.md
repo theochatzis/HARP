@@ -40,12 +40,40 @@ with
 
 * `sharedEnergy`: energy of the rec-hits in both objects (GeV);
 * `score`: Σ_hits (f_sim − f_reco)² E_hit² / Σ_hits f_sim² E_hit², with f the
-  fraction of the hit's energy assigned to the object. A hit of the sim
-  trackster missing from the reco trackster is penalised by its full energy,
-  a hit present in both with the same fraction costs nothing. Hence 0 = the
-  reco trackster contains every hit of the sim trackster, 1 = nothing shared.
-  The reco→sim map uses the mirrored formula (penalising reco hits absent
-  from the sim trackster).
+  fraction of the hit's energy assigned to the object and the sum running over
+  the rec-hits of the sim trackster. The reco→sim map uses the mirrored
+  formula, normalised to the reco trackster's hits (it penalises reco hits
+  absent from the sim trackster).
+
+### What the score is, and is not
+
+The score is deterministic hit bookkeeping, not the output of a classifier
+and not a probability. A hit of the sim trackster that the reco trackster
+does not contain contributes its full f_sim² E², a hit present in both with
+the same fraction contributes nothing; the normalisation makes the result
+bounded between 0 (the reco trackster contains every hit of the sim trackster
+with the right fractions) and 1 (nothing in common). For hits that are either
+fully inside or fully outside the reco trackster it reduces to
+
+    score(S→R) ≈ 1 − (E²-weighted fraction of S's hits captured by R)
+
+so `score < 0.2` reads "one trackster captures about 80 % or more of the
+hadron's energy-weighted hits". Two consequences for hadron studies:
+
+* the E² weighting is dominated by the highest-energy hits: a trackster can
+  hold half of the raw energy in many small layer clusters and still have a
+  poor score;
+* the purity criterion (one trackster with score < 0.2) is a statement about
+  containment in a *single* object, designed for compact EM showers. A hadron
+  shower split into several well-reconstructed tracksters fails it even
+  though all of its energy is clustered. That is why the CMSSW efficiency and
+  purity curves for charged hadrons stay low while `hasReco` reaches 1, and
+  why the linking is better judged by comparing collections (CLUE3D, linked,
+  candidate tracksters) at equal criteria and by the energy budget.
+
+The only machine-learning quantities in the chain are the TICL candidate
+pdgId and the regressed energy; the association maps and everything built on
+them (best trackster, efficiency, purity, fake rate) are pure hit overlap.
 
 From that list the matcher stores
 
