@@ -13,7 +13,7 @@ Collections produced (product labels):
 """
 from harp.config import Module
 
-ENERGY_BINS = [1, 2, 3, 5, 7, 10, 15, 20, 30, 40, 50, 70, 100, 130, 160, 200]
+ENERGY_BINS = [0.2, 0.3, 0.5, 0.7, 1, 2, 3, 5, 7, 10, 15, 20, 30, 40, 50, 70, 100, 130, 160, 200]
 
 hgcalReader = Module(
     "HGCalNanoReader",
@@ -64,8 +64,9 @@ def matcher(tracksters, simToReco, candidates="", scoreCut=1.0, minSharedEnergy=
         simToReco=simToReco,
         layerClusters="hgcalReader:layerClusters",
         candidates=candidates,
-        genToSim="deltaR",
-        maxDeltaR=0.3,
+        genToSim="energyEta",   # sim trackster with the gen energy and eta; "deltaR" fails for bent low-pT hadrons
+        maxEnergyDiff=0.05,
+        maxDeltaEta=0.2,
         scoreCut=scoreCut,
         minSharedEnergy=minSharedEnergy,
         genStatus=1,

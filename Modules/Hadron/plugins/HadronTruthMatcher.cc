@@ -9,8 +9,13 @@
 //       simToReco     = "hgcalReader:simCP2clue3d",     # AssociationMap sim -> reco
 //       layerClusters = "hgcalReader:layerClusters",    # optional (total LC energy)
 //       candidates    = "hgcalReader:ticlCandidates",   # optional, only meaningful if 'tracksters' is the candidate trackster collection
-//       genToSim      = "deltaR",   # "deltaR" (gen direction vs sim boundary/barycenter) or "index"
-//       maxDeltaR     = 0.3,
+//       genToSim      = "energyEta",  # how the gen hadron is matched to its sim trackster (CaloParticle):
+//                                   #  "energyEta": same energy (sim regressed_energy = CaloParticle energy) and eta,
+//                                   #               immune to the magnetic bending of charged hadrons (default)
+//                                   #  "deltaR":    gen direction vs sim boundary position (fails for low-pT charged hadrons)
+//                                   #  "index":     sim trackster i <-> gen particle i (gun samples)
+//       maxEnergyDiff = 0.05, maxDeltaEta = 0.2,   # energyEta tolerances (relative energy, |delta eta|)
+//       maxDeltaR     = 0.3,                       # deltaR tolerance
 //       scoreCut      = 1.0,        # a reco trackster is "linked" if its sim->reco score is below this
 //       minSharedEnergy = 0.0,      # ... and it shares at least this energy (GeV) with the sim trackster
 //       pdgIds = [], genStatus = 1)
@@ -30,6 +35,7 @@
 #include "DataFormats/interface/Trackster.h"
 
 #include <algorithm>
+#include <cmath>
 
 namespace harp {
 
@@ -43,8 +49,10 @@ class HadronTruthMatcher : public Producer {
         simToReco_(ctx.consumesProduct(ps.get<std::string>("simToReco"))),
         lc_(ps.get<std::string>("layerClusters", "")),
         cand_(ps.get<std::string>("candidates", "")),
-        genToSim_(ps.get<std::string>("genToSim", "deltaR")),
+        genToSim_(ps.get<std::string>("genToSim", "energyEta")),
         maxDR_(ps.get<double>("maxDeltaR", 0.3)),
+        maxEDiff_(ps.get<double>("maxEnergyDiff", 0.05)),
+        maxDEta_(ps.get<double>("maxDeltaEta", 0.2)),
         scoreCut_(ps.get<double>("scoreCut", 1.0)),
         minShared_(ps.get<double>("minSharedEnergy", 0.)),
         pdgIds_(ps.get<std::vector<int>>("pdgIds", {})),
@@ -122,6 +130,22 @@ class HadronTruthMatcher : public Producer {
   int findSim(const GenParticle& g, std::size_t ig, const TracksterCollection& sims) const {
     if (sims.empty()) return -1;
     if (genToSim_ == "index") return ig < sims.size() ? static_cast<int>(ig) : -1;
+    if (genToSim_ == "energyEta") {
+      // the sim trackster's regressed energy is the CaloParticle energy, i.e. the gen energy; eta is not bent by the field
+      int best = -1;
+      double bestDiff = maxEDiff_;
+      for (std::size_t is = 0; is < sims.size(); ++is) {
+        const Trackster& s = sims[is];
+        if (s.isPU || g.energy <= 0) continue;
+        const double eSim = s.regressedEnergy > 0 ? s.regressedEnergy : s.rawEnergy;
+        const double diff = std::fabs(eSim - g.energy) / g.energy;
+        const double eta = (s.hasSimInfo && s.boundaryEta != 0) ? s.boundaryEta : s.barycenterEta;
+        if (std::fabs(eta - g.eta) > maxDEta_) continue;
+        if (diff < bestDiff) { bestDiff = diff; best = static_cast<int>(is); }
+      }
+      return best;
+    }
+    if (genToSim_ != "deltaR") throw std::runtime_error("HadronTruthMatcher: unknown genToSim '" + genToSim_ + "' (energyEta, deltaR, index)");
     int best = -1;
     double bestDR = maxDR_;
     for (std::size_t is = 0; is < sims.size(); ++is) {
@@ -137,7 +161,7 @@ class HadronTruthMatcher : public Producer {
   }
 
   std::string gen_, sim_, reco_, simToReco_, lc_, cand_, genToSim_;
-  double maxDR_, scoreCut_, minShared_;
+  double maxDR_, maxEDiff_, maxDEta_, scoreCut_, minShared_;
   std::vector<int> pdgIds_;
   int genStatus_;
   std::string out_;

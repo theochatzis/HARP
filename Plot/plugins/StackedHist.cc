@@ -89,7 +89,7 @@ class StackedHist : public Plotter {
     const std::string xTitle = ps_.get<std::string>("xTitle", comps.front()->GetXaxis()->GetTitle());
     const std::string yTitle = ps_.get<std::string>("yTitle", normalize ? "Fraction" : comps.front()->GetYaxis()->GetTitle());
 
-    auto axis = tdr::tdrHist(PlotContext::safeName(name_) + "_axis", yTitle, y1, y2, xTitle, logx ? std::max(x1, 0.5) : x1, x2);
+    auto axis = tdr::tdrHist(PlotContext::safeName(name_) + "_axis", yTitle, y1, y2, xTitle, logx ? std::max(x1, 0.1) : x1, x2);
     auto c = tdr::tdrCanvas(PlotContext::safeName(name_), axis.get(), ctx_.lumi);
     gPad->SetLogx(logx); gPad->SetLogy(logy);
     THStack stack((PlotContext::safeName(name_) + "_stack").c_str(), "");
@@ -104,7 +104,7 @@ class StackedHist : public Plotter {
     for (int i = static_cast<int>(comps.size()) - 1; i >= 0; --i) if (!labels[i].empty()) leg->AddEntry(comps[i].get(), labels[i].c_str(), "F");
     const std::string text = ps_.get<std::string>("text", s.label);
     if (!text.empty()) { TLatex l; l.SetNDC(); l.SetTextFont(42); l.SetTextSize(0.04); l.DrawLatex(gPad->GetLeftMargin() + 0.04, 1 - gPad->GetTopMargin() - 0.18, text.c_str()); }
-    drawRegions(logx ? std::max(x1, 0.5) : x1, x2, y1, y2, logx, logy);
+    drawRegions(logx ? std::max(x1, 0.1) : x1, x2, y1, y2, logx, logy);
     gPad->RedrawAxis();
     ctx_.save(*c, name_);
     for (auto& h : comps) stack.GetHists()->Remove(h.get());

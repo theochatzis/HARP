@@ -13,3 +13,4 @@ samples/files/*.txt
 *.log
 *.swp
 .vscode/
+plots/

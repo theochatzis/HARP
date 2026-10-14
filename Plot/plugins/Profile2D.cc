@@ -36,7 +36,7 @@ class Profile2D : public Plotter {
     const std::string xTitle = ps_.get<std::string>("xTitle", h2->GetXaxis()->GetTitle());
     const std::string yTitle = ps_.get<std::string>("yTitle", h2->GetYaxis()->GetTitle());
     auto axis = tdr::tdrHist(PlotContext::safeName(name_) + "_axis", yTitle, h2->GetYaxis()->GetXmin(), h2->GetYaxis()->GetXmax(), xTitle,
-                             logx ? std::max(h2->GetXaxis()->GetXmin(), 0.5) : h2->GetXaxis()->GetXmin(), h2->GetXaxis()->GetXmax());
+                             logx ? std::max(h2->GetXaxis()->GetXmin(), 0.1) : h2->GetXaxis()->GetXmin(), h2->GetXaxis()->GetXmax());
     // wider right margin: palette (4% of the pad) + its labels + its title must fit outside the frame
     const double rightMargin = ps_.get<double>("rightMargin", 0.22);
     auto c = tdr::tdrCanvas(PlotContext::safeName(name_), axis.get(), ctx_.lumi, 11, tdr::kSquare, rightMargin);

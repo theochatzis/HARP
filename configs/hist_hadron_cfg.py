@@ -19,7 +19,9 @@ options.register("maxEvents", -1, int, "events to process (-1: all)")
 options.register("histFile", "hists.root", str, "histogram output file")
 options.register("linkScoreCut", 1.0, float, "sim->reco score below which a reco trackster counts as linked to the hadron (0 = perfect, 1 = none)")
 options.register("minSharedEnergy", 0.0, float, "minimum energy [GeV] a linked trackster must share with the sim trackster")
-options.register("purityScoreCut", 0.6, float, "reco->sim score below which a reco trackster is 'correctly matched' (matching QA)")
+options.register("effSharedFraction", 0.5, float, "CMSSW efficiency: a trackster must share this fraction of the sim energy (HGCalValidation minTSTSharedEneFracEfficiency)")
+options.register("purityScoreCut", 0.2, float, "CMSSW purity / duplicate: sim->reco score cut (HGCalValidation maxSimToRecoScoreForPurity)")
+options.register("fakeScoreCut", 0.6, float, "CMSSW non-fake: reco->sim score cut (HGCalValidation maxRecoToSimScoreForNonFake)")
 options.register("perHadronType", True, bool, "one histogram directory per hadron pdgId")
 options.parse()
 
@@ -48,8 +50,10 @@ process.pidCLUE3D = Module("PIDAnalyzer", matches="matchCLUE3D", showerVariables
 process.budgetCLUE3D = Module("EnergyBudgetAnalyzer", matches="matchCLUE3D", tracksters="hgcalReader:clue3d",
                               layerClusters="hgcalReader:layerClusters", energyBins=ENERGY_BINS, perHadronType=options.perHadronType)
 # 3) matching quality with the sim information
-process.qaCLUE3D = Module("MatchingQAAnalyzer", matches="matchCLUE3D", tracksters="hgcalReader:clue3d", recoToSim="hgcalReader:clue3d2simCP",
-                          scoreCut=options.purityScoreCut, energyBins=ENERGY_BINS, perHadronType=options.perHadronType)
+process.qaCLUE3D = Module("MatchingQAAnalyzer", matches="matchCLUE3D", tracksters="hgcalReader:clue3d",
+                          recoToSim="hgcalReader:clue3d2simCP", simToReco="hgcalReader:simCP2clue3d",
+                          effSharedFraction=options.effSharedFraction, purityScoreCut=options.purityScoreCut, fakeScoreCut=options.fakeScoreCut,
+                          energyBins=ENERGY_BINS, perHadronType=options.perHadronType)
 
 process.path = ["hgcalReader", "genFilter", "matchCLUE3D", "matchCand", "showerCLUE3D",
                 "summary", "respCLUE3D", "respCand", "pidCLUE3D", "budgetCLUE3D", "qaCLUE3D"]

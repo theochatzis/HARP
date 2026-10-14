@@ -8,11 +8,11 @@ harp samples scan                       # cache the file lists of samples/*.json
 
 # histogram job on all pion samples, 10 nano files per job
 harp submit --cfg configs/hist_hadron_cfg.py --hist-only \
-            --sample pip_p1to200 pim_p1to200 pi0_p1to200 \
+            --sample pip_p0p2to200 pim_p0p2to200 pi0_p0p2to200 \
             --output-dir /eos/user/$USER/HARP/hists_v1 --tag hists_v1 --files-per-job 10
 
 # skim job (writes a skim + a control hist file per job)
-harp submit --cfg configs/skim_hadron_cfg.py --sample pip_p1to200 \
+harp submit --cfg configs/skim_hadron_cfg.py --sample pip_p0p2to200 \
             --output-dir /eos/user/$USER/HARP/skim_v1 --tag skim_v1 --files-per-job 5 --opt minEnergy=2
 
 harp check --tag hists_v1               # validates every output, writes resubmit.txt
@@ -36,7 +36,7 @@ What happens:
 test a job locally:
 
 ```bash
-cd ~/condor_work/HARP/<tag> && mkdir -p test && cd test && cp ../harp.tar.gz ../jobs.json . && bash ../job.sh pip_p1to200_hist_hadron_000
+cd ~/condor_work/HARP/<tag> && mkdir -p test && cd test && cp ../harp.tar.gz ../jobs.json . && bash ../job.sh pip_p0p2to200_hist_hadron_000
 ```
 
 The templates in `condor/templates/` are the same texts that `condor.py`

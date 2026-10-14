@@ -84,7 +84,7 @@ process.leadFrac = Module("TracksterEnergyFractionAnalyzer", matches="matchCLUE3
 process.path.append("leadFrac")
 ```
 
-`harp run configs/hist_hadron_cfg.py sample=pip_p1to200 maxFiles=1 -- --dump`
+`harp run configs/hist_hadron_cfg.py sample=pip_p0p2to200 maxFiles=1 -- --dump`
 prints the module table and products without processing events.
 
 ## Checklist for a good module

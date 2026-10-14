@@ -3,7 +3,7 @@
 See `condor/README.md` for the commands. Summary:
 
 ```bash
-harp submit --cfg configs/hist_hadron_cfg.py --hist-only --sample pip_p1to200 pim_p1to200 \
+harp submit --cfg configs/hist_hadron_cfg.py --hist-only --sample pip_p0p2to200 pim_p0p2to200 \
             --output-dir /eos/user/$USER/HARP/hists_v1 --tag hists_v1 --files-per-job 10 [--opt linkScoreCut=0.8] [--dry-run]
 harp check --tag hists_v1
 harp submit --resubmit --tag hists_v1

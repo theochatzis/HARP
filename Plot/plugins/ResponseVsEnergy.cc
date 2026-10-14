@@ -60,7 +60,7 @@ class ResponseVsEnergy : public Plotter {
       if (opt.keepSlices) drawSlices(res, srcs[i], i);
       scales.push_back(std::move(gs)); resolutions.push_back(std::move(gr));
     }
-    xRange_ = ps_.get<std::vector<double>>("xRange", {logx ? std::max(xmin, 0.5) : xmin, xmax});
+    xRange_ = ps_.get<std::vector<double>>("xRange", {logx ? std::max(xmin, 0.1) : xmin, xmax});
     drawGraphs(scales, srcs, name_ + "_scale", xTitle, scaleTitle, sr, logx, true, {});
     if (fitTexts.size() != srcs.size()) fitTexts.clear();
     drawGraphs(resolutions, srcs, name_ + "_resolution", xTitle, resTitle, rr, logx, false, fitTexts);

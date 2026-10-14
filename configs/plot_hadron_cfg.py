@@ -24,7 +24,7 @@ from harp import samples
 options = VarParsing()
 options.register("histDir", "output/hists", str, "directory with <sample>.root histogram files")
 options.register("files", [], list, "explicit sample:file pairs")
-options.register("samples", ["pi0_p1to200", "pip_p1to200", "pim_p1to200", "Kp_p1to200", "Km_p1to200", "p_p1to200", "pbar_p1to200"], list, "samples to overlay")
+options.register("samples", ["pi0_p0p2to200", "pip_p0p2to200", "pim_p0p2to200", "Kp_p0p2to200", "Km_p0p2to200", "p_p0p2to200", "pbar_p0p2to200"], list, "samples to overlay")
 options.register("outputDir", "/eos/user/t/tchatzis/php-plots/harp", str, "where to write the figures (<outputDir>/<tag>/...)")
 options.register("tag", "", str, "sub-directory of outputDir")
 options.register("method", "gauss", str, "slice extraction: gauss | mean | median")
@@ -99,6 +99,16 @@ if "matching" in options.categories:
     job.add("Overlay1D", name="matching/recoScore/overlay", sources=sources("qaCLUE3D/{hadron}/h_recoScore"), normalize=True, logy=True)
     job.add("Overlay1D", name="matching/recoMatched/overlay", sources=sources("qaCLUE3D/{hadron}/h_recoMatched"), normalize=True)
     job.add("Overlay1D", name="matching/hasReco/overlay", sources=sources("qaCLUE3D/{hadron}/h_hasReco"), normalize=True)
+    job.add("Overlay1D", name="matching/hasReco/vsE", sources=sources("qaCLUE3D/{hadron}/p_hasReco_vs_E"), logx=True, yRange=[0, 1.45],
+            yTitle="Efficiency to have a reco trackster", xTitle="E_{gen} (GeV)", drawOption="PE")
+    for var, ytitle in [("efficient", "Efficiency (shared E_{sim} fraction #geq 0.5)"), ("pure", "Purity (sim#rightarrowreco score < 0.2)"),
+                        ("duplicate", "Duplicate rate (#geq 2 tracksters, score < 0.2)"), ("nonFake", "Non-fake fraction (reco#rightarrowsim score < 0.6)")]:
+        job.add("Overlay1D", name="matching/%s/vsE" % var, sources=sources("qaCLUE3D/{hadron}/p_%s_vs_E" % var), logx=True, yRange=[0, 1.45],
+                yTitle=ytitle, xTitle="E_{gen} (GeV)", drawOption="PE")
+    job.add("Overlay1D", name="matching/nonFake/vsRawE", sources=sources("qaCLUE3D/{hadron}/p_nonFake_vs_rawE"), logx=True, yRange=[0, 1.45],
+            yTitle="Non-fake fraction (reco#rightarrowsim score < 0.6)", xTitle="E_{raw} (GeV)", drawOption="PE")
+    job.add("Overlay1D", name="matching/hasSim/vsE", sources=sources("qaCLUE3D/{hadron}/p_hasSim_vs_E"), logx=True, yRange=[0, 1.45],
+            yTitle="Efficiency to have a sim trackster", xTitle="E_{gen} (GeV)", drawOption="PE")
 
 # --- budget: where the layer-cluster energy ends up ---------------------------
 if "budget" in options.categories:

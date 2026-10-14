@@ -4,7 +4,7 @@ A job is a python file that builds a `harp.config.Process` (or, for plots, a
 `harp.plotcfg.PlotJob`) and is executed by `harp run` / `harp plot`:
 
 ```
-harp run configs/hist_hadron_cfg.py sample=pip_p1to200 maxFiles=3 histFile=h.root [--workdir work] [--dry-run] [-- harpRun options]
+harp run configs/hist_hadron_cfg.py sample=pip_p0p2to200 maxFiles=3 histFile=h.root [--workdir work] [--dry-run] [-- harpRun options]
 ```
 
 1. the python file runs with `sys.argv` = the `key=value` options;

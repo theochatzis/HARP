@@ -18,7 +18,7 @@ All types are plain structs in `DataFormats/interface/`, collections are
 ## Matching chain (gun samples)
 
 ```
-GenParticle ──ΔR (gen direction vs sim boundary)──▶ sim trackster (CaloParticle)
+GenParticle ──same energy and eta (sim regressed_energy = CaloParticle energy)──▶ sim trackster (CaloParticle)
                                                        │  AssociationMap  SimCP2ticlTrackstersCLUE3DHighByHits
                                                        ▼
                                              reco tracksters (best = lowest score, linked = score < cut)
@@ -27,7 +27,7 @@ GenParticle ──ΔR (gen direction vs sim boundary)──▶ sim trackster (Ca
                                                  TICL candidate (pdgId, energy)
 ```
 
-The same `HadronTruthMatcher` serves any reco trackster collection; the
+Details and the quality criteria are in `docs/matching.md`. The same `HadronTruthMatcher` serves any reco trackster collection; the
 shipped configs run it for CLUE3D tracksters (`matchCLUE3D`) and for the
 candidate tracksters with the TICL candidate look-up (`matchCand`).
 

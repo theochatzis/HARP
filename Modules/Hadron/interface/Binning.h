@@ -11,7 +11,7 @@
 namespace harp {
 
 inline std::vector<double> energyBinsFromConfig(const ParameterSet& ps, const std::string& key = "energyBins") {
-  std::vector<double> def = {1, 2, 3, 5, 7, 10, 15, 20, 30, 40, 50, 70, 100, 130, 160, 200};
+  std::vector<double> def = {0.2, 0.3, 0.5, 0.7, 1, 2, 3, 5, 7, 10, 15, 20, 30, 40, 50, 70, 100, 130, 160, 200};
   return ps.get<std::vector<double>>(key, def);
 }
 

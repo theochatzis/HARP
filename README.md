@@ -26,7 +26,7 @@ harp samples scan            # cache the file lists of samples/phase2_gun.json
 
 ```bash
 # histograms for one gun sample (4 files), then for all of them
-harp run configs/hist_hadron_cfg.py sample=pip_p1to200 maxFiles=4 histFile=output/hists/pip_p1to200.root
+harp run configs/hist_hadron_cfg.py sample=pip_p0p2to200 maxFiles=4 histFile=output/hists/pip_p0p2to200.root
 for s in $(harp samples list | awk '{print $1}'); do
   harp run configs/hist_hadron_cfg.py sample=$s histFile=output/hists/$s.root
 done
@@ -35,12 +35,12 @@ done
 harp plot configs/plot_hadron_cfg.py histDir=output/hists tag=hadrons_noPU
 
 # optional: a skim (slim nano + matching tables) and histograms from it
-harp run configs/skim_hadron_cfg.py sample=pip_p1to200 maxFiles=1 outputFile=skim_pip.root
+harp run configs/skim_hadron_cfg.py sample=pip_p0p2to200 maxFiles=1 outputFile=skim_pip.root
 harp run configs/hist_hadron_cfg.py inputFiles=skim_pip.root histFile=hists_from_skim.root
 harpInspect skim_pip.root -c
 
 # condor for the full samples
-harp submit --cfg configs/hist_hadron_cfg.py --hist-only --sample pip_p1to200 Kp_p1to200 \
+harp submit --cfg configs/hist_hadron_cfg.py --hist-only --sample pip_p0p2to200 Kp_p0p2to200 \
             --output-dir /eos/user/$USER/HARP/v1 --tag v1 --files-per-job 10
 harp check --tag v1
 harp merge --tag v1
@@ -73,5 +73,6 @@ Adding a study means adding one `.cc` file under `Modules/` and a few lines of c
 ## Documentation
 
 `docs/design.md` (architecture), `docs/adding_a_module.md` (new module in 20 lines),
-`docs/configuration.md`, `docs/edm.md` (data model and nano mapping),
+`docs/configuration.md`, `docs/edm.md` (data model and nano mapping), `docs/matching.md`
+(gen → sim → reco matching and the CMSSW validation criteria),
 `docs/plotting.md`, `docs/condor.md`, `docs/nano_schema.md` (what the gun nanos contain).
