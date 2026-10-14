@@ -44,9 +44,12 @@ process.respCand = Module("ResponseAnalyzer", matches="matchCand", energyBins=EN
                           definitions=["bestRaw", "bestRegressed", "candidate", "candidateRaw", "allRaw"])
 # 2) particle identification inputs
 process.pidCLUE3D = Module("PIDAnalyzer", matches="matchCLUE3D", showerVariables="showerCLUE3D", energyBins=ENERGY_BINS, perHadronType=options.perHadronType)
+# 3b) energy budget: where the layer-cluster energy ends up (best / other / no trackster)
+process.budgetCLUE3D = Module("EnergyBudgetAnalyzer", matches="matchCLUE3D", tracksters="hgcalReader:clue3d",
+                              layerClusters="hgcalReader:layerClusters", energyBins=ENERGY_BINS, perHadronType=options.perHadronType)
 # 3) matching quality with the sim information
 process.qaCLUE3D = Module("MatchingQAAnalyzer", matches="matchCLUE3D", tracksters="hgcalReader:clue3d", recoToSim="hgcalReader:clue3d2simCP",
                           scoreCut=options.purityScoreCut, energyBins=ENERGY_BINS, perHadronType=options.perHadronType)
 
 process.path = ["hgcalReader", "genFilter", "matchCLUE3D", "matchCand", "showerCLUE3D",
-                "summary", "respCLUE3D", "respCand", "pidCLUE3D", "qaCLUE3D"]
+                "summary", "respCLUE3D", "respCand", "pidCLUE3D", "budgetCLUE3D", "qaCLUE3D"]

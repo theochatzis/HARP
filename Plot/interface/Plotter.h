@@ -57,6 +57,12 @@ class Plotter {
 
  protected:
   std::vector<PlotSource> sources() const;
+  // Detector regions along an axis ("regions" for x, "yRegions" for y):
+  //   regions=[{"label": "CE-E", "x1": 0.5, "x2": 26.5}, {"label": "CE-H", "x1": 26.5, "x2": 47.5}]
+  // Draws a dashed line at every inner boundary and the labels centred in each region,
+  // just inside the frame (top for x regions, right for y regions). Call after the
+  // frame has been drawn, with the frame limits in axis units.
+  void drawRegions(double x1, double x2, double y1, double y2, bool logx = false, bool logy = false) const;
   const ParameterSet ps_;
   PlotContext& ctx_;
   std::string name_;

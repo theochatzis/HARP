@@ -3,7 +3,8 @@
 // in TDR style with a wider right margin for the palette.
 //
 //   job.add("Profile2D", name="pid/nLayers/vsE_pip", hist="pidCLUE3D/pip/h2_nLayers_vs_E", sources=[Source(file, label="#pi^{+}")],
-//           normalizeColumns=True, logx=True, logz=False, profile=True, profileColor="kRed+1", zTitle="", text="")
+//           normalizeColumns=True, logx=True, logz=False, profile=True, profileColor="kRed+1", zTitle="", text="",
+//           yRegions=layer_regions(firstBinEdge=0))   # labelled detector regions along y (see Plotter::drawRegions)
 #include "Plot/interface/PlotStyle.h"
 #include "Plot/interface/PlotterFactory.h"
 #include "Plot/interface/TdrStyle.h"
@@ -54,6 +55,7 @@ class Profile2D : public Plotter {
       TLatex l; l.SetNDC(); l.SetTextFont(42); l.SetTextSize(0.045);
       l.DrawLatex(gPad->GetLeftMargin() + 0.04, 1 - gPad->GetTopMargin() - 0.18, text.c_str());
     }
+    drawRegions(axis->GetXaxis()->GetXmin(), axis->GetXaxis()->GetXmax(), axis->GetMinimum(), axis->GetMaximum(), logx, false);
     gPad->RedrawAxis();
     gPad->Update();
     if (auto* pal = dynamic_cast<TPaletteAxis*>(h2->GetListOfFunctions()->FindObject("palette"))) {

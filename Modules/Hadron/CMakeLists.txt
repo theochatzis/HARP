@@ -6,4 +6,5 @@ harp_add_plugin(Hadron
     plugins/PIDAnalyzer.cc
     plugins/MatchingQAAnalyzer.cc
     plugins/EventSummaryAnalyzer.cc
+    plugins/EnergyBudgetAnalyzer.cc
   DEPENDS HarpDataFormats)

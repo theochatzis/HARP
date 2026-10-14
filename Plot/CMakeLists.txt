@@ -3,5 +3,5 @@ harp_add_library(Plot
   DEPENDS HarpCore HarpFit)
 
 harp_add_plugin(Plotters
-  SOURCES plugins/Overlay1D.cc plugins/ResponseVsEnergy.cc plugins/Profile2D.cc
+  SOURCES plugins/Overlay1D.cc plugins/ResponseVsEnergy.cc plugins/Profile2D.cc plugins/StackedHist.cc
   DEPENDS HarpPlot HarpFit ROOT::HistPainter)

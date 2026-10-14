@@ -3,6 +3,11 @@
 #include "Core/interface/Logger.h"
 #include "Plot/interface/PlotStyle.h"
 
+#include <TLatex.h>
+#include <TLine.h>
+#include <TPad.h>
+
+#include <cmath>
 #include <filesystem>
 
 namespace harp {
@@ -57,6 +62,46 @@ TFile* PlotContext::rootFile() {
     rootFile_.reset(TFile::Open(rootFileName_.c_str(), "RECREATE"));
   }
   return rootFile_.get();
+}
+
+namespace {
+// axis value -> NDC inside the current pad
+double toNDC(double v, double lo, double hi, double mLo, double mHi, bool log) {
+  const double f = log ? (std::log(v) - std::log(lo)) / (std::log(hi) - std::log(lo)) : (v - lo) / (hi - lo);
+  return mLo + f * (1 - mLo - mHi);
+}
+}  // namespace
+
+void Plotter::drawRegions(double x1, double x2, double y1, double y2, bool logx, bool logy) const {
+  for (const bool alongX : {true, false}) {
+    const std::string key = alongX ? "regions" : "yRegions";
+    if (!ps_.has(key)) continue;
+    const std::vector<ParameterSet> regions = ps_.getVPSet(key);
+    if (regions.empty()) continue;
+    const double lo = alongX ? x1 : y1, hi = alongX ? x2 : y2;
+    const bool log = alongX ? logx : logy;
+    const double mLo = alongX ? gPad->GetLeftMargin() : gPad->GetBottomMargin();
+    const double mHi = alongX ? gPad->GetRightMargin() : gPad->GetTopMargin();
+    const int lineColor = PlotStyle::colorFromName(ps_.get<std::string>("regionLineColor", "kGray+2"));
+    // label position across the other axis, NDC: just inside the frame top (x regions) / right edge (y regions)
+    const double labelPos = ps_.get<double>("regionLabelPos", alongX ? 1 - gPad->GetTopMargin() - 0.045 : 1 - gPad->GetRightMargin() - 0.03);
+    const double textSize = ps_.get<double>("regionTextSize", 0.038);
+    for (std::size_t i = 0; i < regions.size(); ++i) {
+      const double r1 = std::max(regions[i].get<double>("x1"), lo), r2 = std::min(regions[i].get<double>("x2"), hi);
+      if (r2 <= r1) continue;
+      if (i + 1 < regions.size() && r2 > lo && r2 < hi) {  // inner boundary
+        TLine* l = alongX ? new TLine(r2, y1, r2, y2) : new TLine(x1, r2, x2, r2);
+        l->SetLineStyle(ps_.get<int>("regionLineStyle", 7)); l->SetLineColor(lineColor); l->SetLineWidth(1); l->Draw();
+      }
+      const std::string label = regions[i].get<std::string>("label", "");
+      if (label.empty()) continue;
+      const double mid = log ? std::sqrt(r1 * r2) : 0.5 * (r1 + r2);
+      const double along = toNDC(mid, lo, hi, mLo, mHi, log);
+      TLatex t; t.SetNDC(); t.SetTextFont(42); t.SetTextSize(textSize); t.SetTextColor(lineColor);
+      if (alongX) { t.SetTextAlign(23); t.DrawLatex(along, labelPos, label.c_str()); }
+      else { t.SetTextAlign(21); t.SetTextAngle(90); t.DrawLatex(labelPos, along, label.c_str()); }
+    }
+  }
 }
 
 std::vector<PlotSource> Plotter::sources() const {

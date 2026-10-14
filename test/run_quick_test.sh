@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
-# End-to-end smoke test on a handful of files: skim -> hist (nano and skim) -> plots.
-# Usage: source env/setup.sh; bash test/run_quick_test.sh [nFiles]
+# run_quick_test.sh - end-to-end smoke test of HARP on a handful of files:
+# skim -> hist (on nano and on the skim) -> plots, for all gun samples.
+#
+# Usage:
+#   source env/setup.sh
+#   bash test/run_quick_test.sh [nFiles]     # nFiles per sample for the hist step (default 2)
+#   bash test/run_quick_test.sh -h
+# Output goes to test/out/ (histograms, skim, plots); takes a few minutes.
 set -euo pipefail
+case "${1:-}" in -h|--help) sed -n '2,/^set -euo/p' "$0" | grep '^#' | sed 's/^# \{0,1\}//'; exit 0;; esac
 N=${1:-2}
 cd "$HARP_BASE"
 OUT=test/out

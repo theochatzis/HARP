@@ -4,7 +4,8 @@
 //
 //   job.add("Overlay1D", name="pid/nLayers/overlay", hist="pidCLUE3D/{hadron}/h_nLayers",
 //           sources=[...], normalize=True, logy=False, ratio=False, xTitle="", yTitle="", rebin=1,
-//           xRange=[0, 48], yRange=[0, 0.2], ratioRange=[0.5, 1.5], drawOption="PE", legend=[0.6, 0.55, 0.9, 0.9], text="")
+//           xRange=[0, 48], yRange=[0, 0.2], ratioRange=[0.5, 1.5], drawOption="PE", legend=[0.6, 0.55, 0.9, 0.9], text="",
+//           regions=layer_regions())   # labelled detector regions along x (see Plotter::drawRegions)
 #include "Plot/interface/PlotStyle.h"
 #include "Plot/interface/PlotterFactory.h"
 #include "Plot/interface/TdrStyle.h"
@@ -71,6 +72,7 @@ class Overlay1D : public Plotter {
       if (!srcs[i].label.empty()) leg->AddEntry(hs[i].get(), srcs[i].label.c_str(), opt.find('P') != std::string::npos ? "PLE" : "L");
     }
     drawText(ps_.get<std::string>("text", ""));
+    drawRegions(x1, x2, y1, y2, logx, logy);
     gPad->RedrawAxis();
     std::vector<std::unique_ptr<TH1>> ratios;
     if (ratio) {

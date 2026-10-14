@@ -79,3 +79,17 @@ HADRONS = OrderedDict([
 
 def hadron_style(pdgId):
     return HADRONS.get(pdgId, dict(key="pdg%d" % pdgId, label=str(pdgId), color=None, marker=None))
+
+
+# HGCal compartments in layer numbers (DataFormats/interface/HGCalLayers.h): 26 CE-E + 21 CE-H planes.
+N_LAYERS_EE = 26
+N_LAYERS = 47
+
+
+def layer_regions(firstBinEdge=0.5, nEE=N_LAYERS_EE, nLayers=N_LAYERS):
+    """CE-E / CE-H regions for a layer axis, for the 'regions' (x) / 'yRegions' (y) plot options.
+
+    firstBinEdge is the lower edge of the bin holding layer 1: 0.5 for a 0.5..47.5 axis (bin centre = layer),
+    1 for a 0..48 axis where layer l fills [l, l+1)."""
+    boundary = firstBinEdge + nEE
+    return [dict(label="CE-E", x1=firstBinEdge, x2=boundary), dict(label="CE-H", x1=boundary, x2=firstBinEdge + nLayers)]
