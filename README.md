@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/harp_logo.png" alt="HARP" width="480">
+  <img src="docs/images/harp_logo.png" alt="HARP" width="100%">
 </p>
 
 # HARP — Hadron Analysis & Reconstruction for Particle-flow interpretation
