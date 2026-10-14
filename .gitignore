@@ -5,6 +5,7 @@ __pycache__/
 *.root
 *.pdf
 *.png
+!docs/images/*.png
 output/
 work/
 samples/files/*.txt

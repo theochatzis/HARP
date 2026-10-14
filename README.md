@@ -1,4 +1,8 @@
-# HARP — Hadron Analysis & Response Performance
+<p align="center">
+  <img src="docs/images/harp_logo.png" alt="HARP" width="480">
+</p>
+
+# HARP — Hadron Analysis & Reconstruction for Particle-flow interpretation
 
 C++ framework (python only for job configuration) to study hadrons in the CMS
 Phase-2 HGCal from nano-like inputs: energy response, particle identification
